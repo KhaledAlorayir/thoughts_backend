@@ -19,3 +19,4 @@ app.get("/", (req, res) => {
 });
 
 app.use("/api/auth", require("./routes/userRoutes"));
+app.use("/api/profile", require("./routes/profileRoutes"));

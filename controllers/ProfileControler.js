@@ -98,7 +98,10 @@ const AddTags = async (req, res) => {
     p.tags = TagsArr;
     await p.save();
     res.json(p);
-  } catch (err) {}
+  } catch (err) {
+    console.log(err);
+    res.json({ msg: "server error" });
+  }
 };
 
 const DeleteAccount = async (req, res) => {

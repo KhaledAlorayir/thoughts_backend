@@ -1,6 +1,5 @@
 const Post = require("../models/Post");
 const { validationResult } = require("express-validator");
-const res = require("express/lib/response");
 
 const CreatePost = async (req, res) => {
   try {
@@ -143,8 +142,26 @@ const CommentOnPost = async (req, res) => {
 
 const DeleteComment = async (req, res) => {
   try {
-    //delete comment by its id
-    //edit profilecont delete method
+    const { pid, cid } = req.params;
+
+    const p = await Post.findById(pid);
+    if (!p) return res.json({ msg: "no post found with this id!" });
+
+    const cindex = p.comments.findIndex(
+      (comment) => comment._id.toString() === cid
+    );
+
+    if (cindex === -1)
+      return res.json({ msg: "no comment found with this id!" });
+
+    const isAuthorized = p.comments[cindex].user.toString() === req.uid;
+
+    if (!isAuthorized) return res.json({ msg: "not authorized" });
+
+    p.comments.splice(cindex, 1);
+    await p.save();
+
+    res.json(p.comments);
   } catch (err) {
     console.log(err);
     res.json({ msg: "server error" });
@@ -160,4 +177,5 @@ module.exports = {
   LikePost,
   unlikePost,
   CommentOnPost,
+  DeleteComment,
 };

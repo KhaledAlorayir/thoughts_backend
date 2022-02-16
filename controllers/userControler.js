@@ -71,6 +71,11 @@ const Login = async (req, res) => {
 const getAuth = async (req, res) => {
   try {
     const u = await User.findById(req.uid).select("-password");
+
+    if (!u) {
+      return res.json({ msg: "invalid credentials" });
+    }
+
     res.json(u);
   } catch (err) {
     console.log(err);
@@ -78,4 +83,14 @@ const getAuth = async (req, res) => {
   }
 };
 
-module.exports = { register, Login, getAuth };
+const getUsers = async (req, res) => {
+  try {
+    const u = await User.find().select("-password");
+    res.json(u);
+  } catch (err) {
+    console.log(err);
+    res.json({ msg: "server error" });
+  }
+};
+
+module.exports = { register, Login, getAuth, getUsers };

@@ -9,6 +9,7 @@ const {
   LikePost,
   unlikePost,
   CommentOnPost,
+  DeleteComment,
 } = require("../controllers/PostController");
 const { CreatePostVali, CommentVali } = require("../validation/PostValidation");
 
@@ -22,5 +23,6 @@ router.delete("/:id", Auth, DeletePost);
 router.post("/like/:id", Auth, LikePost);
 router.post("/unlike/:id", Auth, unlikePost);
 router.post("/comment/:id", [Auth, CommentVali], CommentOnPost);
+router.delete("/comment/:pid/:cid", Auth, DeleteComment);
 
 module.exports = router;

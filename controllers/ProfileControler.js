@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const Profile = require("../models/Profile");
+const Posts = require("../models/Post");
 const { validationResult } = require("express-validator");
 
 const getMyProfile = async (req, res) => {
@@ -106,9 +107,9 @@ const AddTags = async (req, res) => {
 
 const DeleteAccount = async (req, res) => {
   try {
-    //todo delete posts
     await Promise.all([
       Profile.findOneAndDelete({ user: req.uid }),
+      Posts.deleteMany({ user: req.uid }),
       User.findByIdAndDelete(req.uid),
     ]);
     res.json({ mess: "user has been deleted" });

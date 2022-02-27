@@ -26,9 +26,7 @@ const register = async (req, res) => {
       password: hashed,
     });
 
-    const token = jwt.sign({ uid: u.id }, process.env.JWT_SECRET, {
-      expiresIn: 3600,
-    });
+    const token = jwt.sign({ uid: u.id }, process.env.JWT_SECRET);
 
     res.json({ token });
   } catch (err) {
@@ -57,9 +55,7 @@ const Login = async (req, res) => {
       return res.json({ msg: "invalid credentials" });
     }
 
-    const token = jwt.sign({ uid: u.id }, process.env.JWT_SECRET, {
-      expiresIn: 3600,
-    });
+    const token = jwt.sign({ uid: u.id }, process.env.JWT_SECRET);
 
     res.json({ token });
   } catch (error) {

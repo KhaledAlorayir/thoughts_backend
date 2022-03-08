@@ -46,11 +46,16 @@ const Create_Update_Profile = async (req, res) => {
 
     if (bio) p.bio = bio;
     if (location) p.location = location;
-    if (social?.youtube) p.social.youtube = social.youtube;
-    if (social?.twitter) p.social.twitter = social.twitter;
-    if (social?.facebook) p.social.facebook = social.facebook;
-    if (social?.linkedin) p.social.linkedin = social.linkedin;
-    if (social?.instagram) p.social.instagram = social.instagram;
+    if (social?.youtube && social?.youtube.trim() !== "")
+      p.social.youtube = social.youtube;
+    if (social?.twitter && social?.twitter.trim() !== "")
+      p.social.twitter = social.twitter;
+    if (social?.facebook && social?.facebook.trim() !== "")
+      p.social.facebook = social.facebook;
+    if (social?.linkedin && social?.linkedin.trim() !== "")
+      p.social.linkedin = social.linkedin;
+    if (social?.instagram && social?.instagram.trim() !== "")
+      p.social.instagram = social.instagram;
 
     const updated = await Profile.findOneAndUpdate({ user: req.uid }, p, {
       new: true,

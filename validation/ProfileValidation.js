@@ -6,7 +6,6 @@ const Create_Update_Vali = [
 ];
 
 const AddTagVali = [
-  check("tags", "tags are requierd").notEmpty({ ignore_whitespace: true }),
   check("tags", "maximum of 5 tags").custom((v) => v.split(",").length <= 5),
   check("tags", "tags are too long").isLength({ max: 40 }),
 ];

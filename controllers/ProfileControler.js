@@ -101,7 +101,12 @@ const AddTags = async (req, res) => {
 
     const TagsArr = tags.split(",").map((tag) => tag.trim());
 
-    p.tags = TagsArr;
+    if (tags.trim() === "") {
+      p.tags = [];
+    } else {
+      p.tags = TagsArr;
+    }
+
     await p.save();
     res.json(p);
   } catch (err) {

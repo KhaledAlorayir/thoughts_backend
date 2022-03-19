@@ -7,6 +7,7 @@ const {
   getProfileByID,
   DeleteAccount,
   AddTags,
+  ChangeAvatar,
 } = require("../controllers/ProfileControler");
 const {
   Create_Update_Vali,
@@ -21,5 +22,6 @@ router.get("/:id", getProfileByID);
 router.post("/", [Auth, Create_Update_Vali], Create_Update_Profile);
 router.delete("/", Auth, DeleteAccount);
 router.put("/tags", [Auth, AddTagVali], AddTags);
+router.put("/avatar", Auth, ChangeAvatar);
 
 module.exports = router;

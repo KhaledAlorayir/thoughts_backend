@@ -2,6 +2,9 @@ const User = require("../models/User");
 const Profile = require("../models/Profile");
 const Posts = require("../models/Post");
 const { validationResult } = require("express-validator");
+const path = require("path");
+const { v4: uuidv4 } = require("uuid");
+const fs = require("fs");
 
 const getMyProfile = async (req, res) => {
   try {
@@ -129,6 +132,53 @@ const DeleteAccount = async (req, res) => {
   }
 };
 
+const ChangeAvatar = async (req, res) => {
+  try {
+    if (!req.files) return res.json({ msg: "the avatar is requierd!" });
+
+    const { avatar } = req.files;
+    const avatarEXT = path.extname(avatar.name).toLowerCase();
+
+    const ExtAlowed = [".png", ".jpg", ".jpeg"].includes(avatarEXT);
+
+    if (!ExtAlowed) return res.json({ msg: "PNG,JPG,JPEG are only allowed!" });
+
+    const u = await User.findById(req.uid).select("-password");
+
+    const OLDAvatarname = u.avatar.split("/").pop();
+
+    const name = uuidv4() + avatarEXT;
+
+    const FilePath = path.join(__dirname + "/../public", "avatars/") + name;
+
+    const ImgURL = `http://localhost:5000/avatar/${name}`;
+
+    avatar.mv(FilePath, async (err) => {
+      try {
+        if (err) return res.json({ msg: err });
+
+        u.avatar = ImgURL;
+        await u.save();
+
+        //delete old avatar file
+        const oldPath =
+          path.join(__dirname + "/../public", "avatars/") + OLDAvatarname;
+        if (fs.existsSync(oldPath)) {
+          fs.unlinkSync(oldPath);
+        }
+
+        res.json(u);
+      } catch (err) {
+        console.log(err);
+        res.json({ msg: "server error" });
+      }
+    });
+  } catch (err) {
+    console.log(err);
+    res.json({ msg: "server error" });
+  }
+};
+
 module.exports = {
   getProfiles,
   getMyProfile,
@@ -136,4 +186,5 @@ module.exports = {
   getProfileByID,
   DeleteAccount,
   AddTags,
+  ChangeAvatar,
 };
